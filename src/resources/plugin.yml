@@ -1,0 +1,5 @@
+main: net.problemzone.hubbibi.Main
+version: 0.1
+name: Hubbibi
+authors: [JustFloooo]
+api-version: 1.13

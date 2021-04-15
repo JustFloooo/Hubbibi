@@ -1,0 +1,20 @@
+#Essence Config
+
+#General Navigator Settings
+navigator:
+  name: '&cNavigator'
+  item: 'ENDER_PEARL'
+  inv-slot: 4
+  inv-size: 27
+
+#Navigator Content
+navigator-warps:
+  spawn:
+    slot: 13
+    item: 'SLIME_BALL'
+    name: '&cSpawn'
+    coordinates:
+      x: -30.5
+      y: 127
+      z: -211.5
+    lore:
