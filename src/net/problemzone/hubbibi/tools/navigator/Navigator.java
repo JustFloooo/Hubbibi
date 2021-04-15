@@ -35,18 +35,6 @@ public class Navigator{
         }
     }
 
-    public ItemStack compassItem() {
-        ItemStack compass = new ItemStack(COMPASS_ITEM);
-
-        ItemMeta compassMeta = compass.getItemMeta();
-        assert compassMeta != null;
-        compassMeta.setDisplayName(COMPASS_NAME);
-
-        compass.setItemMeta(compassMeta);
-
-        return compass;
-    }
-
     public boolean isCompass(ItemStack item) {
         if (item != null && item.hasItemMeta()) {
             return Objects.requireNonNull(item.getItemMeta()).hasDisplayName() && item.getItemMeta().getDisplayName().equals(COMPASS_NAME);
@@ -79,7 +67,16 @@ public class Navigator{
     }
 
     public void giveCompass(Player p) {
-        p.getInventory().setItem(COMPASS_SLOT, this.compassItem());
+
+        ItemStack compassItem= new ItemStack(COMPASS_ITEM);
+
+        ItemMeta compassMeta = compassItem.getItemMeta();
+        assert compassMeta != null;
+        compassMeta.setDisplayName(COMPASS_NAME);
+
+        compassItem.setItemMeta(compassMeta);
+
+        p.getInventory().setItem(COMPASS_SLOT, compassItem);
     }
 
     @Nullable
