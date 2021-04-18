@@ -29,7 +29,7 @@ public class Navigator{
         COMPASS_INV_SIZE = config.getConfig().isInt("navigator.inv-size") ? config.getConfig().getInt("navigator.inv-size") : 27;
         COMPASS_ITEM = Material.getMaterial(Objects.requireNonNull(config.getConfig().getString("navigator.item")));
         COMPASS_WARPS = new ArrayList<>();
-        for(String warp : config.getConfig().getConfigurationSection("navigator-warps").getKeys(false)){
+        for(String warp : Objects.requireNonNull(config.getConfig().getConfigurationSection("navigator-warps")).getKeys(false)){
             Bukkit.getLogger().info(warp);
             COMPASS_WARPS.add(new NavigatorWarp(config, "navigator-warps." + warp));
         }
