@@ -18,3 +18,23 @@ navigator-warps:
       y: 127
       z: -211.5
     lore:
+
+  featured:
+    slot: 11
+    item: 'FIREWORK_ROCKET'
+    name: '&dFeatured'
+    coordinates:
+      x: -34
+      y: 119
+      z: -186.1
+    lore:
+
+  arcade:
+    slot: 15
+    item: 'CLOCK'
+    name: '&dArcade'
+    coordinates:
+      x: -78.5
+      y: 122
+      z: -176.5
+    lore:

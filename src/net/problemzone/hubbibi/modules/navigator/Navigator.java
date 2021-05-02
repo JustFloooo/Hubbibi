@@ -1,4 +1,4 @@
-package net.problemzone.hubbibi.tools.navigator;
+package net.problemzone.hubbibi.modules.navigator;
 
 import net.problemzone.hubbibi.utils.Config;
 import org.bukkit.Bukkit;
