@@ -1,4 +1,4 @@
-package net.problemzone.hubbibi.utils;
+package net.problemzone.hubbibi.util;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
