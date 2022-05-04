@@ -1,6 +1,6 @@
 package net.problemzone.hubbibi.modules.navigator;
 
-import net.problemzone.hubbibi.utils.Config;
+import net.problemzone.hubbibi.util.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

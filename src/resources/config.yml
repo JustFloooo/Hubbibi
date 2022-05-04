@@ -38,3 +38,23 @@ navigator-warps:
       y: 122
       z: -176.5
     lore:
+
+    skywars:
+      slot: 3
+      item: 'GRASS_BLOCK'
+      name: '&bSkywars'
+      coordinates:
+        x: -11.5
+        y: 132
+        z: -140
+      lore:
+
+    jumpy:
+      slot: 5
+      item: 'DIAMOND_BOOTS'
+      name: '&aJumpy'
+      coordinates:
+        x: -13
+        y: 122
+        z: -178
+      lore:

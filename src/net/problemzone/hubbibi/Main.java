@@ -3,7 +3,7 @@ package net.problemzone.hubbibi;
 import net.problemzone.hubbibi.modules.messages.MessageListener;
 import net.problemzone.hubbibi.modules.navigator.Navigator;
 import net.problemzone.hubbibi.modules.navigator.NavigatorListener;
-import net.problemzone.hubbibi.utils.Config;
+import net.problemzone.hubbibi.util.Config;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
