@@ -1,9 +1,12 @@
 package net.problemzone.hubbibi.modules.navigator;
 
-import net.problemzone.hubbibi.util.Config;
+import net.problemzone.hubbibi.exceptions.InvalidConfigException;
+import net.problemzone.hubbibi.util.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Navigator{
+public class NavigatorManager {
+
+    private static NavigatorManager instance;
 
     private final String COMPASS_NAME;
     private final int COMPASS_INV_SIZE;
@@ -23,15 +28,16 @@ public class Navigator{
     private final Material COMPASS_ITEM;
     private final List<NavigatorWarp> COMPASS_WARPS;
 
-    public Navigator(Config config) {
-        COMPASS_NAME = config.getConfig().isString("navigator.name") ? ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getConfig().getString("navigator.name"))) : ChatColor.RED + "Navigator";
-        COMPASS_SLOT = config.getConfig().isInt("navigator.inv-slot") ? config.getConfig().getInt("navigator.inv-slot") : 4;
-        COMPASS_INV_SIZE = config.getConfig().isInt("navigator.inv-size") ? config.getConfig().getInt("navigator.inv-size") : 27;
-        COMPASS_ITEM = Material.getMaterial(Objects.requireNonNull(config.getConfig().getString("navigator.item")));
+    private NavigatorManager() {
+        YamlConfiguration config = ConfigManager.getInstance().getConfig();
+        COMPASS_NAME = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("navigator.name")));
+        COMPASS_SLOT = config.getInt("navigator.inv-slot");
+        COMPASS_INV_SIZE = config.getInt("navigator.inv-size");
+        COMPASS_ITEM = Material.getMaterial(Objects.requireNonNull(config.getString("navigator.item")));
+
         COMPASS_WARPS = new ArrayList<>();
-        for(String warp : Objects.requireNonNull(config.getConfig().getConfigurationSection("navigator-warps")).getKeys(false)){
-            Bukkit.getLogger().info(warp);
-            COMPASS_WARPS.add(new NavigatorWarp(config, "navigator-warps." + warp));
+        for (String warp : Objects.requireNonNull(config.getConfigurationSection("navigator-warps")).getKeys(false)) {
+            COMPASS_WARPS.add(new NavigatorWarp("navigator-warps." + warp));
         }
     }
 
@@ -46,7 +52,7 @@ public class Navigator{
     public void openCompassMenu(Player player) {
         Inventory inv = Bukkit.createInventory(null, COMPASS_INV_SIZE, COMPASS_NAME);
 
-        for(NavigatorWarp warp : COMPASS_WARPS){
+        for (NavigatorWarp warp : COMPASS_WARPS) {
             ItemStack item = new ItemStack(warp.getItem());
 
             ItemMeta itemMeta = item.getItemMeta();
@@ -54,7 +60,7 @@ public class Navigator{
             itemMeta.setDisplayName(warp.getName());
 
             List<String> lore = new ArrayList<>();
-            for(String lore_line : warp.getLore()){
+            for (String lore_line : warp.getLore()) {
                 lore.add(ChatColor.translateAlternateColorCodes('&', lore_line));
             }
             itemMeta.setLore(lore);
@@ -80,10 +86,10 @@ public class Navigator{
     }
 
     @Nullable
-    public Vector getVectorbyName(String name) {
-        for(NavigatorWarp warp : COMPASS_WARPS){
-            if(warp.getName().equals(name))
-                return warp.getDestination();
+    public NavigatorWarp getWarpByName(String name) {
+        for (NavigatorWarp warp : COMPASS_WARPS) {
+            if (warp.getName().equals(name))
+                return warp;
         }
         return null;
     }
@@ -92,20 +98,32 @@ public class Navigator{
         return COMPASS_NAME;
     }
 
-    private static class NavigatorWarp{
+    public static NavigatorManager getInstance() {
+        if (instance == null) instance = new NavigatorManager();
+        return instance;
+    }
+
+    public static class NavigatorWarp {
 
         private final int slot;
         private final Material item;
         private final String name;
         private final Vector destination;
+        private final double pitch;
+        private final double yaw;
         private final List<String> lore;
 
-        public NavigatorWarp(Config config, String path) {
-            this.slot = config.getConfig().getInt(path+".slot");
-            this.item = Material.getMaterial(Objects.requireNonNull(config.getConfig().getString(path + ".item")));
-            this.name = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getConfig().getString(path+".name")));
-            this.destination = new Vector(config.getConfig().getDouble(path+".coordinates.x"), config.getConfig().getDouble(path+".coordinates.y"), config.getConfig().getDouble(path+".coordinates.z")) ;
-            this.lore = config.getConfig().getStringList(path+".lore");
+        public NavigatorWarp(String path) {
+            ConfigurationSection config = ConfigManager.getInstance().getConfig().getConfigurationSection(path);
+            if (config == null) throw new InvalidConfigException("The config.yml file is malformed. Please check the navigator warps section for completeness");
+
+            this.slot = config.getInt("slot");
+            this.item = Material.getMaterial(Objects.requireNonNull(config.getString("item")));
+            this.name = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("name")));
+            this.destination = new Vector(config.getDouble("coordinates.x"), config.getDouble( "coordinates.y"), config.getDouble("coordinates.z"));
+            this.pitch = config.isSet("direction.pitch") ? config.getDouble("direction.pitch") : 0;
+            this.yaw = config.isSet("direction.yaw") ? config.getDouble("direction.yaw") : 0;
+            this.lore = config.isSet("lore") ? config.getStringList("lore") : new ArrayList<>();
         }
 
         public int getSlot() {
@@ -122,6 +140,14 @@ public class Navigator{
 
         public Vector getDestination() {
             return destination;
+        }
+
+        public double getPitch() {
+            return pitch;
+        }
+
+        public double getYaw() {
+            return yaw;
         }
 
         public List<String> getLore() {

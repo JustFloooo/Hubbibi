@@ -1,23 +1,19 @@
 package net.problemzone.hubbibi;
 
+import net.problemzone.hubbibi.modules.WorldProtectionListener;
 import net.problemzone.hubbibi.modules.messages.MessageListener;
-import net.problemzone.hubbibi.modules.navigator.Navigator;
 import net.problemzone.hubbibi.modules.navigator.NavigatorListener;
-import net.problemzone.hubbibi.util.Config;
-import org.bukkit.configuration.InvalidConfigurationException;
+import net.problemzone.hubbibi.util.ConfigManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 
-    private final Config config = new Config(this);
-    private Navigator navigator;
+    private static Main instance;
 
     @Override
     public void onEnable() {
         getLogger().info("Loading Hubbibi Plugin.");
-
-        getLogger().info("Reading Hubbibi Configuration.");
-        loadConfiguration();
+        initiatePlugin();
 
         getLogger().info("Loading Hubbibi Commands.");
         registerCommands();
@@ -28,13 +24,9 @@ public class Main extends JavaPlugin {
         getLogger().info("Hubbibi primed and ready.");
     }
 
-    private void loadConfiguration(){
-        try {
-            config.loadFiles();
-            navigator = new Navigator(config);
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
+    private void initiatePlugin() {
+        instance = this;
+        ConfigManager.getInstance().setupConfig();
     }
 
     private void registerCommands(){
@@ -42,8 +34,13 @@ public class Main extends JavaPlugin {
     }
 
     private void registerListeners(){
-        getServer().getPluginManager().registerEvents(new NavigatorListener(navigator), this);
+        getServer().getPluginManager().registerEvents(new NavigatorListener(), this);
         getServer().getPluginManager().registerEvents(new MessageListener(), this);
+        getServer().getPluginManager().registerEvents(new WorldProtectionListener(), this);
+    }
+
+    public static Main getInstance() {
+        return instance;
     }
 
 }

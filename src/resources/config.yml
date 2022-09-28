@@ -17,6 +17,9 @@ navigator-warps:
       x: -30.5
       y: 127
       z: -211.5
+    direction:
+      pitch: 90
+      yaw: 90
     lore:
 
   featured:
@@ -27,7 +30,6 @@ navigator-warps:
       x: -34
       y: 119
       z: -186.1
-    lore:
 
   arcade:
     slot: 15
@@ -37,7 +39,6 @@ navigator-warps:
       x: -78.5
       y: 122
       z: -176.5
-    lore:
 
   skywars:
     slot: 3
@@ -47,7 +48,6 @@ navigator-warps:
       x: -11.5
       y: 132
       z: -140
-    lore:
 
   jumpy:
     slot: 5
@@ -57,4 +57,3 @@ navigator-warps:
       x: -13
       y: 122
       z: -178
-    lore:
